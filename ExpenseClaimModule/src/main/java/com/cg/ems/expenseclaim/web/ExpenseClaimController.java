@@ -1,5 +1,8 @@
 package com.cg.ems.expenseclaim.web;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,13 +18,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.cg.ems.expenseclaim.dto.Client;
 import com.cg.ems.expenseclaim.dto.Employee;
-import com.cg.ems.expenseclaim.dto.Expense;
 import com.cg.ems.expenseclaim.dto.ExpenseClaim;
-import com.cg.ems.expenseclaim.dto.FinanceUser;
-import com.cg.ems.expenseclaim.dto.Project;
+import com.cg.ems.expenseclaim.exception.ExpenseClaimNotFound;
 import com.cg.ems.expenseclaim.service.ExpenseClaimService;
 
-@CrossOrigin(origins = "http://localhost:4200/expenseclaim")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/ems")
 public class ExpenseClaimController {
@@ -37,7 +38,7 @@ public class ExpenseClaimController {
 	}
 	
 	@GetMapping(value="/claim/{claimId}",produces = "application/json")
-	public ExpenseClaim findClaim(@PathVariable int claimId) {
+	public ExpenseClaim findClaim(@PathVariable int claimId) throws ExpenseClaimNotFound{
 		return service.viewClaim(claimId);
 	}
 	
@@ -51,16 +52,16 @@ public class ExpenseClaimController {
 		return service.deleteClaim(claimId);
 		
 	}
-	@GetMapping(value = "/employee",produces = "application/json")
-	public Employee getEmployee(@RequestParam String employeeId) {
-		Employee retrivedEmployee =restTemplate.getForObject("http://product-add-service/product/add/" + employeeId,Employee.class);
+	@GetMapping(value = "/employee/{employeeId}",produces = "application/json")
+	public Employee getEmployee(@PathVariable String employeeId) {
+		Employee retrivedEmployee =restTemplate.getForObject("http://ems-employee-service/employee/id/" + employeeId,Employee.class);
 		return retrivedEmployee;
 	}
 	
 	@GetMapping(value = "/expense",produces = "application/json")
-	public Expense getExpense() {
-		Expense retrivedExpense =restTemplate.getForObject("http://product-add-service/product//",Expense.class);
-		return retrivedExpense;
+	public List<Integer> getExpense() {
+		List<Integer> expenseIds =Arrays.asList(restTemplate.getForObject("http://ems-expense-service/expense/allId",Integer[].class));
+		return expenseIds;
 	}
 	@GetMapping(value = "/client",produces = "application/json")
 	public int getClient() {
@@ -68,14 +69,14 @@ public class ExpenseClaimController {
 		return retrivedClient.getClientCode();
 	}
 	@GetMapping(value = "/project",produces = "application/json")
-	public Project getProject() {
-		Project retrivedProject =restTemplate.getForObject("http://product-add-service/product//j",Project.class);
-		return retrivedProject;
+	public List<Integer> getProject() {
+		List<Integer> projectIds =Arrays.asList(restTemplate.getForObject("http://ems-project-service/project/allId",Integer[].class));
+		return projectIds;
 	}
 	@GetMapping(value = "/finance",produces = "application/json")
-	public FinanceUser getFinance() {
-		FinanceUser retrivedFinance =restTemplate.getForObject("http://product-add-service/product//j",FinanceUser.class);
-		return retrivedFinance;
+	public List<String> getFinance() {
+		List<String> financeIds =Arrays.asList(restTemplate.getForObject("http://ems-finance-service/finance/getids",String[].class));
+		return financeIds;
 	}
 	
 }

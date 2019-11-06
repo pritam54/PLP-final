@@ -29,7 +29,7 @@ public class ExpenseClaim {
 	@Column
 	private int expenseId;
 	@Column
-	private int financeUserId;
+	private String financeUserId;
 	@Column
 	@NotNull
 	private double amount;
@@ -91,14 +91,15 @@ public class ExpenseClaim {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public int getFinanceUserId() {
+	
+	
+	
+	public String getFinanceUserId() {
 		return financeUserId;
 	}
-	public void setFinanceUserId(int financeUserId) {
+	public void setFinanceUserId(String financeUserId) {
 		this.financeUserId = financeUserId;
 	}
-	
-	
 	public String getEmployeeId() {
 		return employeeId;
 	}

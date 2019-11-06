@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cg.ems.expenseclaim.dao.ExpenseClaimDao;
 import com.cg.ems.expenseclaim.dto.ExpenseClaim;
+import com.cg.ems.expenseclaim.exception.ExpenseClaimNotFound;
 
 @Service
 @Transactional
@@ -20,7 +21,7 @@ public class ExpenseClaimServiceImpl implements ExpenseClaimService {
 	}
 
 	@Override
-	public ExpenseClaim viewClaim(int claimId) {
+	public ExpenseClaim viewClaim(int claimId)throws ExpenseClaimNotFound {
 		return dao.viewClaim(claimId);
 	}
 
